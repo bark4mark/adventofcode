@@ -7,16 +7,27 @@ const lines = input.split("\n");
 const first: number[] = [];
 const second: number[] = [];
 
+const numberOfAppearances = (i: number, list: number[]): number => {
+  let total = 0;
+  for (const j of list) {
+    if (j === i) {
+      total++;
+    }
+  }
+  return total;
+}
+
 for (const line of lines) {
   const [a, b] = line.split("   ");
   first.push(Number(a));
   second.push(Number(b));
 }
 
-const sorter = (a: number, b: number) => a - b;
+let totalSimilarity = 0;
+for(const i of first) {
+  const appearances = numberOfAppearances(i, second);
+  const similarityScore = i * appearances;
+  totalSimilarity += similarityScore;
+}
 
-first.sort(sorter);
-second.sort(sorter);
-
-const distances = first.map((a, i) => Math.abs(a - second[i])).reduce((a, b) => a + b);
-// 3246517
+// 29379307
