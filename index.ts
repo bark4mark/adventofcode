@@ -29,6 +29,24 @@ const input = fs.readFileSync("input.txt", "utf8");
 
 const lines = input.split("\n");
 
-const safeCount = lines.filter((line) => safe(line)).length;
+const safeCount = lines.filter(line => {
+  let isSafe = safe(line);
+  if (!isSafe) {
+    const levels = line.split(" ");
+    for(let i = 0; i < levels.length; i++) {
+      const withRemoved = levels.map((element, index) => {
+        if (index === i) {
+          return undefined;
+        }
+        return element;
+      }).filter(element => element !== undefined);
+      isSafe = safe(withRemoved.join(" "));
+      if (isSafe) {
+        break;
+      }
+    }
+  }
+  return isSafe;
+}).length;
 console.log(safeCount);
-// 472
+// 520
