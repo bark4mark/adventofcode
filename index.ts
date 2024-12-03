@@ -1,33 +1,34 @@
 import fs from "fs";
+const safe = (line: string) => {
+  let isSafe = true;
+  const levels = line.split(" ").map((element) => Number(element));
+  let currentLevel = 1;
+  let isIncreasing;
+  while (currentLevel < levels.length) {
+    const difference = levels[currentLevel] - levels[currentLevel - 1];
+    if (isIncreasing === undefined) {
+      isIncreasing = difference > 0;
+    }
+    if (isIncreasing === true && difference < 0) {
+      isSafe = false;
+    }
 
-const input = fs.readFileSync("input.txt", "utf-8");
+    if (isIncreasing === false && difference > 0) {
+      isSafe = false;
+    }
+
+    if (Math.abs(difference) > 3 || Math.abs(difference) === 0) {
+      isSafe = false;
+    }
+    currentLevel++;
+  }
+  return isSafe;
+};
+
+const input = fs.readFileSync("input.txt", "utf8");
 
 const lines = input.split("\n");
 
-const first: number[] = [];
-const second: number[] = [];
-
-const numberOfAppearances = (i: number, list: number[]): number => {
-  let total = 0;
-  for (const j of list) {
-    if (j === i) {
-      total++;
-    }
-  }
-  return total;
-}
-
-for (const line of lines) {
-  const [a, b] = line.split("   ");
-  first.push(Number(a));
-  second.push(Number(b));
-}
-
-let totalSimilarity = 0;
-for(const i of first) {
-  const appearances = numberOfAppearances(i, second);
-  const similarityScore = i * appearances;
-  totalSimilarity += similarityScore;
-}
-
-// 29379307
+const safeCount = lines.filter((line) => safe(line)).length;
+console.log(safeCount);
+// 472
